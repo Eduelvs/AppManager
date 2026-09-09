@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 0 0 0;
+    --card: 255 255 255;
+    --primary: 0 123 254;
+    --primary-foreground: 255 255 255;
+    --destructive: 255 56 43;
+    --grey: 142 142 147;
+    --grey2: 174 174 178;
+  }
+
+  .dark:root {
+    --background: 0 0 0;
+    --foreground: 255 255 255;
+    --card: 21 21 24;
+    --primary: 3 133 255;
+    --primary-foreground: 255 255 255;
+    --destructive: 254 67 54;
+    --grey: 142 142 147;
+    --grey2: 99 99 102;
+  }
+}
