@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { InvestmentProvider } from '@/lib/investment-store';
 import { useColorScheme } from '@/lib/useColorScheme';
 
 export default function RootLayout() {
@@ -13,11 +14,21 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(route)" />
-        </Stack>
+        <InvestmentProvider>
+          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(route)" />
+            <Stack.Screen
+              name="aporte"
+              options={{
+                presentation: 'modal',
+                gestureEnabled: true,
+                contentStyle: { backgroundColor: '#0b0b0f' },
+              }}
+            />
+          </Stack>
+        </InvestmentProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

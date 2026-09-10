@@ -20,17 +20,19 @@ export default function TabLayout() {
         badgeTextColor={colors.primaryForeground}
         disableTransparentOnScrollEdge
         minimizeBehavior="onScrollDown">
-        <NativeTabs.Trigger name="news">
-          <NativeTabs.Trigger.Icon sf="newspaper" md="newspaper" />
-          <NativeTabs.Trigger.Label>News</NativeTabs.Trigger.Label>
-          <NativeTabs.Trigger.Badge>3</NativeTabs.Trigger.Badge>
-        </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="for-you">
+        <NativeTabs.Trigger name="dashboard">
           <NativeTabs.Trigger.Icon
-            sf={{ default: 'star', selected: 'star.fill' }}
-            md={{ default: 'star_border', selected: 'star' }}
+            sf={{ default: 'chart.bar', selected: 'chart.bar.fill' }}
+            md="bar_chart"
           />
-          <NativeTabs.Trigger.Label>For You</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>Dashboard</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="settings">
+          <NativeTabs.Trigger.Icon
+            sf={{ default: 'gearshape', selected: 'gearshape.fill' }}
+            md="settings"
+          />
+          <NativeTabs.Trigger.Label>Configurações</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
       </NativeTabs>
     </>

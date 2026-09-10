@@ -8,16 +8,12 @@ import { useRouter } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { cssInterop } from 'nativewind';
 
-// Habilita className (Tailwind) em componentes de terceiros.
 cssInterop(Canvas, { className: 'style' });
 cssInterop(BlurView, { className: 'style' });
 cssInterop(SafeAreaView, { className: 'style' });
 
 type AntIconName = ComponentProps<typeof AntDesign>['name'];
 
-/* -------------------------------------------------------------------------- */
-/*  Fundo com brilho radial (Skia)                                            */
-/* -------------------------------------------------------------------------- */
 function Background() {
   const { width, height } = useWindowDimensions();
   return (
@@ -34,9 +30,6 @@ function Background() {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Botão social em vidro                                                     */
-/* -------------------------------------------------------------------------- */
 function SocialButton({
   icon,
   label,
@@ -64,9 +57,6 @@ function SocialButton({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Campo de texto em vidro                                                   */
-/* -------------------------------------------------------------------------- */
 function GlassField({
   label,
   placeholder,
@@ -111,12 +101,9 @@ function GlassField({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Página                                                                    */
-/* -------------------------------------------------------------------------- */
 export default function SignIn() {
   const router = useRouter();
-  const enterApp = () => router.replace('/news');
+  const enterApp = () => router.replace('/dashboard');
 
   return (
     <View className="flex-1 bg-black">
@@ -128,7 +115,6 @@ export default function SignIn() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           contentContainerClassName="px-6 pt-24 pb-12">
-          {/* Cabeçalho */}
           <View className="mb-9 items-center">
             <Text className="mb-3 text-3xl font-bold text-white">Sign Up</Text>
             <Text className="text-center text-[15px] text-[#e6e6e6]">
@@ -136,20 +122,17 @@ export default function SignIn() {
             </Text>
           </View>
 
-          {/* Botões sociais */}
           <View className="flex-row justify-center gap-4">
             <SocialButton icon="google" label="Google" onPress={enterApp} />
             <SocialButton icon="github" label="Github" onPress={enterApp} />
           </View>
 
-          {/* Divisor */}
           <View className="my-8 flex-row items-center gap-4">
             <View className="h-px flex-1 bg-[rgba(227,227,227,0.4)]" />
             <Text className="text-sm text-[#e3e3e3]">OR</Text>
             <View className="h-px flex-1 bg-[rgba(227,227,227,0.4)]" />
           </View>
 
-          {/* Campos */}
           <GlassField
             label="Email"
             placeholder="eg.reacticxislove@gmail.com"
@@ -158,7 +141,6 @@ export default function SignIn() {
           <GlassField label="Password" placeholder="Enter your password" secure />
           <GlassField label="Confirm Password" placeholder="Enter your password again" secure />
 
-          {/* Botão principal */}
           <Pressable className="mt-3 overflow-hidden rounded-[14px]" onPress={enterApp}>
             {({ pressed }) => (
               <View
@@ -168,7 +150,6 @@ export default function SignIn() {
             )}
           </Pressable>
 
-          {/* Rodapé */}
           <Text className="mt-6 text-center text-sm text-[#e6e6e6]">
             Already have an account?{' '}
             <Text className="font-semibold text-white" onPress={enterApp}>
