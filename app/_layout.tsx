@@ -30,6 +30,41 @@ export default function RootLayout() {
                 contentStyle: { backgroundColor: '#0b0b0f' },
               }}
             />
+            <Stack.Screen
+              name="plano/[id]"
+              options={{
+                animation: 'slide_from_right',
+                contentStyle: { backgroundColor: '#000' },
+              }}
+            />
+            <Stack.Screen
+              name="ano"
+              options={{
+                presentation: 'formSheet',
+                sheetAllowedDetents: [0.62],
+                sheetGrabberVisible: true,
+                sheetCornerRadius: 28,
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: '#1c1c1e',
+                  height: '100%',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="plano-nome"
+              options={{
+                presentation: 'formSheet',
+                sheetAllowedDetents: [0.5],
+                sheetGrabberVisible: true,
+                sheetCornerRadius: 28,
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: '#1c1c1e',
+                  height: '100%',
+                },
+              }}
+            />
           </Stack>
         </InvestmentProvider>
       </SafeAreaProvider>

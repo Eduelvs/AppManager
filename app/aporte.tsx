@@ -21,11 +21,13 @@ import { parseAmount } from '@/utils/parseAmount';
 export default function AporteModal() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ year?: string }>();
+  const params = useLocalSearchParams<{ year?: string; goalId?: string }>();
   const year = Number(params.year) || new Date().getFullYear();
+  const goalId = typeof params.goalId === 'string' ? params.goalId : undefined;
 
-  const { getPlan, setActual } = useInvestments();
-  const plan = getPlan(year);
+  const { getPlan, setActual, goals } = useInvestments();
+  const plan = getPlan(year, goalId);
+  const goalName = goals.find((g) => g.id === (goalId ?? ''))?.name;
   const plannedMonthly = plan?.monthlyContribution ?? 0;
   const actuals = plan?.actuals ?? {};
 
@@ -42,7 +44,7 @@ export default function AporteModal() {
   };
 
   const handleSave = () => {
-    setActual(year, month, parseAmount(amount));
+    setActual(year, month, parseAmount(amount), goalId);
     router.back();
   };
 
@@ -53,7 +55,9 @@ export default function AporteModal() {
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Registrar aporte</Text>
-          <Text style={styles.subtitle}>Ano de {year}</Text>
+          <Text style={styles.subtitle}>
+            {goalName ? `${goalName} · ` : ''}Ano de {year}
+          </Text>
         </View>
         <Pressable onPress={() => router.back()} hitSlop={12} style={styles.closeBtn}>
           <Ionicons name="close" size={20} color="#a1a1aa" />
