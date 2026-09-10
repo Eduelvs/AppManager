@@ -20,7 +20,7 @@ export default function TabLayout() {
         badgeTextColor={colors.primaryForeground}
         disableTransparentOnScrollEdge
         minimizeBehavior="onScrollDown">
-        <NativeTabs.Trigger name="index">
+        <NativeTabs.Trigger name="news">
           <NativeTabs.Trigger.Icon sf="newspaper" md="newspaper" />
           <NativeTabs.Trigger.Label>News</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Badge>3</NativeTabs.Trigger.Badge>
