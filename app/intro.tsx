@@ -14,7 +14,7 @@ import Animated, {
 
 import { Background } from '@/components/Background';
 
-const cardAnimation = require('../../../lottieFiles/card lq.json');
+const cardAnimation = require('../lottieFiles/card lq.json');
 
 export default function Intro() {
   const router = useRouter();
@@ -29,7 +29,6 @@ export default function Intro() {
   };
 
   useEffect(() => {
-    // Lottie toca (~1s); no zoom some a opacidade para não estourar o bege.
     scale.value = withSequence(
       withTiming(1, { duration: 1000 }),
       withTiming(14, { duration: 700, easing: Easing.in(Easing.cubic) }, (finished) => {
