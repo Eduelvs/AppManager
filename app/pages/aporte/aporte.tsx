@@ -17,17 +17,12 @@ import { DatePicker } from '@/components/nativewindui/DatePicker';
 import { MONTHS_PT_FULL, formatBRL } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
 
-/* Converte texto digitado em número (aceita vírgula ou ponto). */
 function parseAmount(text: string): number {
   const cleaned = text.replace(/[^0-9,.]/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.');
   const n = parseFloat(cleaned);
   return Number.isFinite(n) ? n : 0;
 }
 
-/**
- * Tela de registro de aporte — apresentada como modal nativo de página.
- * Botão "Salvar" fixo no rodapé (sempre visível, acima do teclado).
- */
 export default function AporteModal() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -131,7 +126,6 @@ export default function AporteModal() {
           )}
         </ScrollView>
 
-        {/* Rodapé fixo com o botão */}
         <View style={[styles.footer, { paddingBottom: 16 + insets.bottom }]}>
           <Pressable onPress={handleSave}>
             {({ pressed }) => (
