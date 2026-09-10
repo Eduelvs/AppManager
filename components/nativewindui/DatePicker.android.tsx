@@ -12,6 +12,10 @@ export function DatePicker({
   materialTimeClassName,
   materialTimeLabel,
   materialTimeLabelClassName,
+  yearOnly,
+  startOnYearSelection,
+  title,
+  design,
   ...props
 }: React.ComponentProps<typeof DateTimePicker> & {
   mode: 'date' | 'time' | 'datetime';
@@ -22,6 +26,10 @@ export function DatePicker({
   materialTimeClassName?: string;
   materialTimeLabel?: string;
   materialTimeLabelClassName?: string;
+  yearOnly?: boolean;
+  startOnYearSelection?: boolean;
+  title?: string;
+  design?: 'default' | 'material';
 }) {
   const show = (currentMode: 'date' | 'time') => () => {
     DateTimePickerAndroid.open({
@@ -30,13 +38,31 @@ export function DatePicker({
       onChange,
       minimumDate: props.minimumDate,
       maximumDate: props.maximumDate,
+      startOnYearSelection,
+      title,
+      design: startOnYearSelection ? 'material' : design,
     });
   };
 
-  const dateLabel = new Intl.DateTimeFormat('pt-BR', {
-    month: 'long',
-    year: 'numeric',
-  }).format(value);
+  const dateLabel = yearOnly
+    ? String(value.getFullYear())
+    : new Intl.DateTimeFormat('pt-BR', {
+        month: 'long',
+        year: 'numeric',
+      }).format(value);
+
+  if (yearOnly && mode.includes('date')) {
+    return (
+      <Pressable onPress={show('date')} hitSlop={8}>
+        {({ pressed }) => (
+          <Text
+            className={`text-right text-[16px] text-white ${pressed ? 'opacity-70' : ''}`}>
+            {dateLabel}
+          </Text>
+        )}
+      </Pressable>
+    );
+  }
 
   return (
     <View className="flex-row gap-2.5">

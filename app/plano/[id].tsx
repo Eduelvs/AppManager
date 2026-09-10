@@ -1,0 +1,115 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useMemo } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+
+import { Background } from '@/components/Background';
+import { AddCard, GlassCard } from '@/components/glass';
+import { formatBRL, projectedThroughYear } from '@/lib/finance';
+import { useInvestments } from '@/lib/investment-store';
+
+export default function PlanoDetalhe() {
+  const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { goals } = useInvestments();
+
+  const goal = goals.find((g) => g.id === id);
+  const planList = useMemo(
+    () => (goal ? Object.values(goal.years).sort((a, b) => a.year - b.year) : []),
+    [goal]
+  );
+
+  if (!goal) {
+    return (
+      <View className="flex-1 bg-black">
+        <StatusBar style="light" />
+        <SafeAreaView className="flex-1 items-center justify-center">
+          <Text className="text-[#a1a1aa]">Plano não encontrado</Text>
+          <Pressable onPress={() => router.back()} className="mt-4">
+            <Text className="text-[16px] font-semibold text-[#c084fc]">Voltar</Text>
+          </Pressable>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 bg-black">
+      <StatusBar style="light" />
+      <Background />
+
+      <SafeAreaView className="flex-1" edges={['top']}>
+        <View className="flex-row items-center justify-between px-4 py-2">
+          <Pressable
+            onPress={() => router.back()}
+            hitSlop={12}
+            className="h-10 w-10 items-center justify-center rounded-full">
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              router.push({ pathname: '/plano-nome', params: { goalId: goal.id } })
+            }
+            hitSlop={12}
+            className="h-10 items-center justify-center px-2">
+            <Text className="text-[16px] font-semibold text-[#c084fc]">Editar</Text>
+          </Pressable>
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="px-6 pb-32">
+          <Animated.View entering={FadeInUp.springify()} className="mb-10 mt-4 items-center">
+            <Text className="text-center text-3xl font-bold text-white">{goal.name}</Text>
+          </Animated.View>
+
+          <Text className="mb-3 text-[13px] font-semibold uppercase tracking-widest text-[#a1a1aa]">
+            Anos configurados
+          </Text>
+
+          <View className="gap-3">
+            {planList.map((p, index) => (
+              <Animated.View
+                key={p.year}
+                entering={FadeInUp.delay(60 + index * 40).springify()}>
+                <Pressable
+                  onPress={() =>
+                    router.push({
+                      pathname: '/ano',
+                      params: { goalId: goal.id, year: String(p.year) },
+                    })
+                  }>
+                  {({ pressed }) => (
+                    <GlassCard className={`p-4 ${pressed ? 'opacity-80' : ''}`}>
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-[16px] font-bold text-white">{p.year}</Text>
+                        <Ionicons name="chevron-forward" size={18} color="#71717a" />
+                      </View>
+                      <Text className="mt-1 text-[13px] text-[#a1a1aa]">
+                        {formatBRL(p.monthlyContribution)}/mês · {p.annualRate}% a.a.
+                      </Text>
+                      <Text className="mt-1 text-[13px] font-semibold text-[#c084fc]">
+                        Projeção: {formatBRL(projectedThroughYear(planList, p.year))}
+                      </Text>
+                    </GlassCard>
+                  )}
+                </Pressable>
+              </Animated.View>
+            ))}
+
+            <Animated.View entering={FadeInUp.delay(60 + planList.length * 40).springify()}>
+              <AddCard
+                onPress={() =>
+                  router.push({ pathname: '/ano', params: { goalId: goal.id } })
+                }
+              />
+            </Animated.View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
+  );
+}

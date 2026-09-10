@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { cssInterop } from 'nativewind';
 import React, { useState } from 'react';
@@ -34,6 +35,8 @@ export function GlassField({
   prefix,
   suffix,
   secure,
+  autoCapitalize = 'none',
+  onBlur,
 }: {
   label: string;
   placeholder?: string;
@@ -43,6 +46,8 @@ export function GlassField({
   prefix?: string;
   suffix?: string;
   secure?: boolean;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  onBlur?: () => void;
 }) {
   const [focused, setFocused] = useState(false);
 
@@ -64,17 +69,39 @@ export function GlassField({
           placeholderTextColor="rgba(255,255,255,0.4)"
           keyboardType={keyboardType}
           secureTextEntry={secure}
-          autoCapitalize="none"
+          autoCapitalize={autoCapitalize}
           autoCorrect={false}
           cursorColor="#d1a0f2"
           selectionColor="#d1a0f2"
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => {
+            setFocused(false);
+            onBlur?.();
+          }}
           className="flex-1 text-[15px] text-white"
         />
         {suffix ? <Text className="ml-1 text-[15px] text-[#a1a1aa]">{suffix}</Text> : null}
       </BlurView>
     </View>
+  );
+}
+
+export function AddCard({
+  onPress,
+  className = '',
+}: {
+  onPress: () => void;
+  className?: string;
+}) {
+  return (
+    <Pressable onPress={onPress}>
+      {({ pressed }) => (
+        <GlassCard
+          className={`min-h-[76px] items-center justify-center p-5 ${pressed ? 'opacity-80' : ''} ${className}`}>
+          <Ionicons name="add" size={28} color="#c084fc" />
+        </GlassCard>
+      )}
+    </Pressable>
   );
 }
 

@@ -8,6 +8,8 @@ export function DatePicker({
   materialTimeClassName: _materialTimeClassName,
   materialTimeLabel: _materialTimeLabel,
   materialTimeLabelClassName: _materialTimeLabelClassName,
+  yearOnly: _yearOnly,
+  startOnYearSelection: _startOnYearSelection,
   ...props
 }: React.ComponentProps<typeof DateTimePicker> & {
   mode: 'date' | 'time' | 'datetime';
@@ -18,6 +20,9 @@ export function DatePicker({
   materialTimeClassName?: string;
   materialTimeLabel?: string;
   materialTimeLabelClassName?: string;
+  yearOnly?: boolean;
+  startOnYearSelection?: boolean;
 }) {
   return <DateTimePicker {...props} />;
 }
+
