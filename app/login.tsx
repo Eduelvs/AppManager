@@ -1,26 +1,23 @@
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Canvas } from '@shopify/react-native-skia';
-import { BlurView } from 'expo-blur';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { cssInterop } from 'nativewind';
-import { Background } from '@/components/Background';
 
 import { GlassField } from '@/components/glass';
+import { Background } from '@/components/Background';
 
 cssInterop(Canvas, { className: 'style' });
-cssInterop(BlurView, { className: 'style' });
 cssInterop(SafeAreaView, { className: 'style' });
 
 
-export default function SignIn() {
+export default function Login() {
   const router = useRouter();
-  const enterApp = () => router.replace('/login');
+  const enterApp = () => router.replace('/dashboard');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <View className="flex-1 bg-black">
@@ -33,9 +30,9 @@ export default function SignIn() {
           keyboardShouldPersistTaps="handled"
           contentContainerClassName="grow justify-center px-6 py-12">
           <View className="mb-9 items-center">
-            <Text className="mb-3 text-3xl font-bold text-white">Criar Conta</Text>
+            <Text className="mb-3 text-3xl font-bold text-white">Login</Text>
             <Text className="text-center text-[15px] text-[#e6e6e6]">
-              Vamos começar criando sua conta.
+              Bem-vindo de volta. Faça login para continuar.
             </Text>
           </View>
 
@@ -53,27 +50,20 @@ export default function SignIn() {
             value={password}
             onChangeText={setPassword}
           />
-          <GlassField
-            label="Confirmar Senha"
-            placeholder="Digite sua senha novamente"
-            secure
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
 
           <Pressable className="mt-3 overflow-hidden rounded-[14px]" onPress={enterApp}>
             {({ pressed }) => (
               <View
                 className={`items-center justify-center bg-white py-4 ${pressed ? 'opacity-80' : ''}`}>
-                <Text className="text-base font-bold text-black">Criar Conta</Text>
+                <Text className="text-base font-bold text-black">Entrar</Text>
               </View>
             )}
           </Pressable>
 
           <Text className="mt-6 text-center text-sm text-[#e6e6e6]">
-            Já tem uma conta?{' '}
-            <Text className="font-semibold text-white" onPress={() => router.push('/login')}>
-              Fazer Login
+            Não tem uma conta?{' '}
+            <Text className="font-semibold text-white" onPress={() => router.push('/signIn')}>
+              Criar Conta
             </Text>
           </Text>
         </ScrollView>

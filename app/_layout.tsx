@@ -20,6 +20,7 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="intro" />
             <Stack.Screen name="signIn" />
+            <Stack.Screen name="login" />
             <Stack.Screen name="(layout)" />
             <Stack.Screen
               name="aporte"

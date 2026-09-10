@@ -1,8 +1,7 @@
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Easing,
   runOnJS,
@@ -12,6 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { StyledLottieView } from '@/@types/lottie';
 import { Background } from '@/components/Background';
 
 const cardAnimation = require('../lottieFiles/card lq.json');
@@ -25,7 +25,7 @@ export default function Intro() {
   const goToSignIn = () => {
     if (didLeave.current) return;
     didLeave.current = true;
-    router.replace('/signIn');
+    router.replace('/login');
   };
 
   useEffect(() => {
@@ -47,32 +47,18 @@ export default function Intro() {
   }));
 
   return (
-    <View style={styles.root}>
+    <View className="flex-1 items-center justify-center overflow-hidden bg-black">
       <StatusBar style="light" />
       <Background />
       <Animated.View style={zoomStyle}>
-        <LottieView
+        <StyledLottieView
           source={cardAnimation}
           autoPlay
           loop={false}
           resizeMode="contain"
-          style={styles.animation}
+          className="h-[360px] w-[320px]"
         />
       </Animated.View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    backgroundColor: '#000000',
-  },
-  animation: {
-    width: 320,
-    height: 360,
-  },
-});

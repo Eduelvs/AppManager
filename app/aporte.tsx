@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -16,12 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DatePicker } from '@/components/nativewindui/DatePicker';
 import { MONTHS_PT_FULL, formatBRL } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
-
-function parseAmount(text: string): number {
-  const cleaned = text.replace(/[^0-9,.]/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.');
-  const n = parseFloat(cleaned);
-  return Number.isFinite(n) ? n : 0;
-}
+import { parseAmount } from '@/utils/parseAmount';
 
 export default function AporteModal() {
   const router = useRouter();
@@ -55,7 +50,6 @@ export default function AporteModal() {
 
   return (
     <View style={styles.root}>
-      {/* Cabeçalho */}
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Registrar aporte</Text>
@@ -74,7 +68,6 @@ export default function AporteModal() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 24 }}>
-          {/* Seleção de mês (picker nativo NativeWindUI) */}
           <Text style={styles.label}>Mês</Text>
           <View className="items-center overflow-hidden rounded-2xl bg-[rgba(255,255,255,0.04)]">
             <DatePicker
@@ -99,7 +92,6 @@ export default function AporteModal() {
             {actuals[month] != null ? ' · já tem aporte' : ''}
           </Text>
 
-          {/* Valor */}
           <View style={styles.valueLabelRow}>
             <Text style={styles.label}>Valor aportado</Text>
             {plannedMonthly > 0 && (

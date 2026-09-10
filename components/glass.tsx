@@ -33,14 +33,16 @@ export function GlassField({
   keyboardType = 'default',
   prefix,
   suffix,
+  secure,
 }: {
   label: string;
   placeholder?: string;
   value: string;
   onChangeText: (text: string) => void;
-  keyboardType?: 'default' | 'numeric' | 'decimal-pad';
+  keyboardType?: 'default' | 'numeric' | 'decimal-pad' | 'email-address';
   prefix?: string;
   suffix?: string;
+  secure?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
 
@@ -61,6 +63,7 @@ export function GlassField({
           placeholder={placeholder}
           placeholderTextColor="rgba(255,255,255,0.4)"
           keyboardType={keyboardType}
+          secureTextEntry={secure}
           autoCapitalize="none"
           autoCorrect={false}
           cursorColor="#d1a0f2"
