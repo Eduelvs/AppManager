@@ -1,25 +1,38 @@
-import { useColorScheme as useNativewindColorScheme } from 'nativewind';
+import { useEffect } from 'react';
+import { useColorScheme as useSystemColorScheme } from 'react-native';
+import { colorScheme as nativewindColorScheme, useColorScheme as useNativewindColorScheme } from 'nativewind';
 
 import { COLORS } from '@/theme/colors';
 
+type ColorSchemeName = 'light' | 'dark' | 'system';
+
 function useColorScheme() {
   const { colorScheme, setColorScheme: setNativeWindColorScheme } = useNativewindColorScheme();
+  const systemColorScheme = useSystemColorScheme();
 
-  async function setColorScheme(scheme: 'light' | 'dark') {
+  function setColorScheme(scheme: ColorSchemeName) {
     setNativeWindColorScheme(scheme);
   }
 
   function toggleColorScheme() {
-    return setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
+    setNativeWindColorScheme(colorScheme === 'dark' ? 'light' : 'dark');
   }
 
+  const resolved = (colorScheme ?? systemColorScheme) === 'dark' ? 'dark' : 'light';
+
   return {
-    colorScheme: colorScheme ?? 'light',
-    isDarkColorScheme: colorScheme === 'dark',
+    colorScheme: resolved,
+    isDarkColorScheme: resolved === 'dark',
     setColorScheme,
     toggleColorScheme,
-    colors: COLORS[colorScheme ?? 'light'],
+    colors: COLORS[resolved],
   };
 }
 
-export { useColorScheme };
+function useSyncSystemColorScheme() {
+  useEffect(() => {
+    nativewindColorScheme.set('system');
+  }, []);
+}
+
+export { useColorScheme, useSyncSystemColorScheme };

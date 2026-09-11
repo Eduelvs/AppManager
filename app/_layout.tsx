@@ -1,7 +1,9 @@
 import '@/global.css';
 
 import { Stack } from 'expo-router';
+import * as SystemUI from 'expo-system-ui';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -9,20 +11,29 @@ import { AuthProvider } from '@/lib/auth';
 import { AuthGate } from '@/lib/auth-gate';
 import { InvestmentProvider } from '@/lib/investment-store';
 import { AppQueryProvider } from '@/lib/query';
-import { useColorScheme } from '@/lib/useColorScheme';
+import { useColorScheme, useSyncSystemColorScheme } from '@/lib/useColorScheme';
 
 export default function RootLayout() {
-  const { isDarkColorScheme } = useColorScheme();
+  const { isDarkColorScheme, colors } = useColorScheme();
+  useSyncSystemColorScheme();
+
+  useEffect(() => {
+    void SystemUI.setBackgroundColorAsync(colors.root);
+  }, [colors.root]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.root }}>
       <SafeAreaProvider>
         <AppQueryProvider>
           <AuthProvider>
             <InvestmentProvider>
               <AuthGate>
                 <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-                <Stack screenOptions={{ headerShown: false }}>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                    contentStyle: { backgroundColor: colors.root },
+                  }}>
                   <Stack.Screen name="index" />
                   <Stack.Screen name="intro" />
                   <Stack.Screen name="signIn" />
@@ -37,7 +48,7 @@ export default function RootLayout() {
                       sheetCornerRadius: 28,
                       headerShown: false,
                       contentStyle: {
-                        backgroundColor: '#1c1c1e',
+                        backgroundColor: colors.sheet,
                         height: '100%',
                       },
                     }}
@@ -46,7 +57,7 @@ export default function RootLayout() {
                     name="plano/[id]"
                     options={{
                       animation: 'slide_from_right',
-                      contentStyle: { backgroundColor: '#000' },
+                      contentStyle: { backgroundColor: colors.root },
                     }}
                   />
                   <Stack.Screen
@@ -58,7 +69,7 @@ export default function RootLayout() {
                       sheetCornerRadius: 28,
                       headerShown: false,
                       contentStyle: {
-                        backgroundColor: '#1c1c1e',
+                        backgroundColor: colors.sheet,
                         height: '100%',
                       },
                     }}
@@ -72,7 +83,7 @@ export default function RootLayout() {
                       sheetCornerRadius: 28,
                       headerShown: false,
                       contentStyle: {
-                        backgroundColor: '#1c1c1e',
+                        backgroundColor: colors.sheet,
                         height: '100%',
                       },
                     }}

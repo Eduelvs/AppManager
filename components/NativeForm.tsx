@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useColorScheme } from '@/lib/useColorScheme';
+
 export function SheetHeader({
   title,
   onCancel,
@@ -12,12 +14,14 @@ export function SheetHeader({
   onSave: () => void;
   saveDisabled?: boolean;
 }) {
+  const { colors } = useColorScheme();
+
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { borderBottomColor: colors.border }]}>
       <Pressable onPress={onCancel} hitSlop={8} style={styles.headerSide}>
-        <Text style={styles.cancel}>Cancelar</Text>
+        <Text style={[styles.cancel, { color: colors.primary }]}>Cancelar</Text>
       </Pressable>
-      <Text style={styles.title} numberOfLines={1}>
+      <Text style={[styles.title, { color: colors.foreground }]} numberOfLines={1}>
         {title}
       </Text>
       <Pressable
@@ -25,14 +29,18 @@ export function SheetHeader({
         hitSlop={8}
         disabled={saveDisabled}
         style={[styles.headerSide, styles.headerRight]}>
-        <Text style={[styles.save, saveDisabled && styles.saveDisabled]}>Salvar</Text>
+        <Text style={[styles.save, { color: saveDisabled ? colors.grey2 : colors.primary }]}>
+          Salvar
+        </Text>
       </Pressable>
     </View>
   );
 }
 
 export function FormGroup({ children }: { children: React.ReactNode }) {
-  return <View style={styles.group}>{children}</View>;
+  const { colors } = useColorScheme();
+
+  return <View style={[styles.group, { backgroundColor: colors.grouped }]}>{children}</View>;
 }
 
 export function FormRow({
@@ -44,9 +52,11 @@ export function FormRow({
   last?: boolean;
   children: React.ReactNode;
 }) {
+  const { colors } = useColorScheme();
+
   return (
-    <View style={[styles.row, !last && styles.rowBorder]}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[styles.row, !last && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}>
+      <Text style={[styles.label, { color: colors.foreground }]}>{label}</Text>
       <View style={styles.rowField}>{children}</View>
     </View>
   );
@@ -66,6 +76,7 @@ export function FormInput({
   autoCapitalize?: 'none' | 'sentences' | 'words';
 }) {
   const inputRef = useRef<TextInput>(null);
+  const { colors, isDarkColorScheme } = useColorScheme();
 
   const moveCaretToEnd = () => {
     const end = value.length;
@@ -80,14 +91,14 @@ export function FormInput({
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor="rgba(255,255,255,0.28)"
+      placeholderTextColor={isDarkColorScheme ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)'}
       keyboardType={keyboardType}
       autoCapitalize={autoCapitalize}
       autoCorrect={false}
-      cursorColor="#c084fc"
-      selectionColor="#c084fc"
+      cursorColor={colors.primary}
+      selectionColor={colors.primary}
       onFocus={moveCaretToEnd}
-      style={styles.input}
+      style={[styles.input, { color: colors.foreground }]}
     />
   );
 }
@@ -101,7 +112,6 @@ const styles = StyleSheet.create({
     paddingTop: 28,
     paddingBottom: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(255,255,255,0.12)',
   },
   headerSide: {
     minWidth: 78,
@@ -116,25 +126,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
   },
   cancel: {
     fontSize: 17,
-    color: '#c084fc',
   },
   save: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#c084fc',
-  },
-  saveDisabled: {
-    color: '#71717a',
   },
   group: {
     marginHorizontal: 16,
     overflow: 'hidden',
     borderRadius: 12,
-    backgroundColor: '#2c2c2e',
   },
   row: {
     minHeight: 48,
@@ -142,15 +145,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
   },
-  rowBorder: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#3a3a3c',
-  },
   label: {
     width: '44%',
     paddingVertical: 12,
     fontSize: 16,
-    color: '#ffffff',
   },
   rowField: {
     flex: 1,
@@ -158,7 +156,6 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 12,
     fontSize: 16,
-    color: '#ffffff',
     textAlign: 'right',
   },
 });

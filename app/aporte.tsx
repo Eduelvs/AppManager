@@ -8,11 +8,13 @@ import { FormGroup, FormInput, FormRow, SheetHeader } from '@/components/NativeF
 import { MONTHS_PT_FULL, formatBRL } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
 import { parseAmount } from '@/utils/parseAmount';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 export default function AporteModal() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ year?: string; goalId?: string }>();
+  const { colors } = useColorScheme();
   const year = Number(params.year) || new Date().getFullYear();
   const goalId = typeof params.goalId === 'string' ? params.goalId : undefined;
 
@@ -50,7 +52,7 @@ export default function AporteModal() {
   };
 
   return (
-    <View style={[styles.root, { paddingBottom: Math.max(insets.bottom, 16) }]}>
+    <View style={[styles.root, { backgroundColor: colors.sheet, paddingBottom: Math.max(insets.bottom, 16) }]}>
       <SheetHeader
         title="Aporte"
         onCancel={() => router.back()}
@@ -75,17 +77,17 @@ export default function AporteModal() {
 
         {plannedMonthly > 0 ? (
           <Pressable onPress={() => setAmount(String(plannedMonthly))} hitSlop={8}>
-            <Text style={styles.hint}>Usar planejado ({formatBRL(plannedMonthly)})</Text>
+            <Text style={[styles.hint, { color: colors.primary }]}>Usar planejado ({formatBRL(plannedMonthly)})</Text>
           </Pressable>
         ) : (
-          <Text style={styles.hint}>
+          <Text style={[styles.hint, { color: colors.primary }]}>
             {goalName ? `${goalName} · ` : ''}
             {MONTHS_PT_FULL[month]} de {year}
           </Text>
         )}
 
         {existing != null ? (
-          <Text style={styles.hintMuted}>Já registrado: {formatBRL(existing)}</Text>
+          <Text style={[styles.hintMuted, { color: colors.muted }]}>Já registrado: {formatBRL(existing)}</Text>
         ) : null}
       </View>
     </View>
@@ -95,7 +97,6 @@ export default function AporteModal() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#1c1c1e',
   },
   body: {
     paddingTop: 28,
@@ -105,12 +106,10 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 13,
     fontWeight: '600',
-    color: '#c084fc',
   },
   hintMuted: {
     marginHorizontal: 16,
     marginTop: 8,
     fontSize: 13,
-    color: '#8e8e93',
   },
 });

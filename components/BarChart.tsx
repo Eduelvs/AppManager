@@ -23,11 +23,11 @@ export function BarChart({ data }: { data: BarDatum[] }) {
       <View className="mb-3 flex-row items-center gap-5">
         <View className="flex-row items-center gap-2">
           <View className="h-2.5 w-2.5 rounded-full bg-[#a855f7]" />
-          <Text className="text-xs text-[#a1a1aa]">Real</Text>
+          <Text className="text-xs text-muted">Real</Text>
         </View>
         <View className="flex-row items-center gap-2">
           <View className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
-          <Text className="text-xs text-[#a1a1aa]">Pendente</Text>
+          <Text className="text-xs text-muted">Pendente</Text>
         </View>
       </View>
 
@@ -77,7 +77,7 @@ export function BarChart({ data }: { data: BarDatum[] }) {
                   ))}
                 </Animated.View>
               </View>
-              <Text className="mt-3 text-[10px] text-[#71717a]">{d.label}</Text>
+              <Text className="mt-3 text-[10px] text-grey2">{d.label}</Text>
             </View>
           );
         })}

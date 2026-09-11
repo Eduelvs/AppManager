@@ -20,6 +20,8 @@ module.exports = {
         destructive: "rgb(var(--destructive) / <alpha-value>)",
         grey: "rgb(var(--grey) / <alpha-value>)",
         grey2: "rgb(var(--grey2) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        sheet: "rgb(var(--sheet) / <alpha-value>)",
       },
     },
   },
