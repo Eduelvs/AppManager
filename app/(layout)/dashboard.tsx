@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import AnimatedGlow, { type PresetConfig } from 'react-native-animated-glow';
 
 import { Background } from '@/components/Background';
 import { BarChart, buildBarData } from '@/components/BarChart';
@@ -14,6 +16,7 @@ import {
   contributedPrincipal,
   formatBRL,
   formatBRLCompact,
+  MONTHS_PT_FULL,
   portfolioMonthlyYield,
   portfolioProjected,
   portfolioReal,
@@ -21,6 +24,45 @@ import {
   realThroughYear,
 } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
+
+const aporteCtaGlow: PresetConfig = {
+  metadata: {
+    name: 'Aporte CTA',
+    textColor: '#FFFFFF',
+    category: 'Custom',
+    tags: ['purple', 'cta'],
+  },
+  states: [
+    {
+      name: 'default',
+      preset: {
+        cornerRadius: 22,
+        outlineWidth: 1.5,
+        borderColor: '#e9d5ff',
+        animationSpeed: 0,
+        borderSpeedMultiplier: 0,
+        glowLayers: [
+          {
+            glowPlacement: 'behind',
+            colors: ['#c084fc', '#a855f7', '#7c3aed'],
+            glowSize: 16,
+            opacity: 0.3,
+            speedMultiplier: 0,
+            coverage: 1,
+          },
+          {
+            glowPlacement: 'behind',
+            colors: ['#f5d0fe'],
+            glowSize: 5,
+            opacity: 0.2,
+            speedMultiplier: 0,
+            coverage: 1,
+          },
+        ],
+      },
+    },
+  ],
+};
 
 export default function Dashboard() {
   const router = useRouter();
@@ -244,7 +286,7 @@ export default function Dashboard() {
               )}
 
               {plan && (
-                <Animated.View entering={FadeInUp.delay(220).springify()}>
+                <Animated.View entering={FadeInUp.delay(220).springify()} className="py-1">
                   <Pressable
                     onPress={() =>
                       router.push({
@@ -255,23 +297,36 @@ export default function Dashboard() {
                         },
                       })
                     }>
-                    {({ pressed }) => (
-                      <GlassCard
-                        className={`flex-row items-center gap-4 p-4 ${pressed ? 'opacity-80' : ''}`}>
-                        <View className="h-11 w-11 items-center justify-center rounded-full bg-[rgba(168,85,247,0.2)]">
-                          <Ionicons name="add" size={24} color="#c084fc" />
-                        </View>
-                        <View className="flex-1">
-                          <Text className="text-[15px] font-semibold text-white">
-                            Registrar aporte do mês
-                          </Text>
-                          <Text className="text-[13px] text-[#a1a1aa]">
-                            Aportado em {effectiveYear}: {formatBRL(contributedPrincipal(plan))}
-                          </Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={20} color="#71717a" />
-                      </GlassCard>
-                    )}
+                    {({ pressed }) => {
+                      const isCurrentYear = effectiveYear === currentYear;
+                      const monthLabel = MONTHS_PT_FULL[new Date().getMonth()];
+
+                      return (
+                        <AnimatedGlow
+                          preset={aporteCtaGlow}
+                          style={{ opacity: pressed ? 0.92 : 1 }}>
+                          <LinearGradient
+                            colors={['#d8b4fe', '#a855f7', '#6d28d9']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={{
+                              borderRadius: 22,
+                              paddingVertical: 16,
+                              paddingHorizontal: 16,
+                            }}>
+                            <View className="flex-row items-center gap-3.5">
+                              <View className="flex-1">
+                                <Text className="text-[16px] font-bold text-white">Adicionar aporte mensal</Text>
+                                
+                              </View>
+                              <View className="h-12 w-12 items-center justify-center rounded-full bg-white/25">
+                                <Ionicons name="add" size={26} color="#ffffff" />
+                              </View>
+                            </View>
+                          </LinearGradient>
+                        </AnimatedGlow>
+                      );
+                    }}
                   </Pressable>
                 </Animated.View>
               )}
