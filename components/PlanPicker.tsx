@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 
-import type { Goal } from '@/lib/investment-store';
+import type { Goal } from '@/lib/finance';
 
 type PlanPickerProps = {
   visible: boolean;

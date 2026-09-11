@@ -14,13 +14,24 @@ import { useInvestments } from '@/lib/investment-store';
 export default function PlanoDetalhe() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { goals } = useInvestments();
+  const { goals, isLoading } = useInvestments();
 
   const goal = goals.find((g) => g.id === id);
   const planList = useMemo(
     () => (goal ? Object.values(goal.years).sort((a, b) => a.year - b.year) : []),
     [goal]
   );
+
+  if (!goal && isLoading) {
+    return (
+      <View className="flex-1 bg-black">
+        <StatusBar style="light" />
+        <SafeAreaView className="flex-1 items-center justify-center">
+          <Text className="text-[#a1a1aa]">Carregando plano...</Text>
+        </SafeAreaView>
+      </View>
+    );
+  }
 
   if (!goal) {
     return (

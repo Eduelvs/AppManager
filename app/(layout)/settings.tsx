@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
@@ -10,10 +10,12 @@ import { Background } from '@/components/Background';
 import { AddCard, GlassCard } from '@/components/glass';
 import { formatBRL, portfolioProjected } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
+import { useAuth } from '@/lib/auth';
 
 export default function Settings() {
   const router = useRouter();
-  const { goals, setActiveGoalId } = useInvestments();
+  const { goals, isLoading, setActiveGoalId } = useInvestments();
+  const { logout, user } = useAuth();
 
   return (
     <View className="flex-1 bg-black">
@@ -32,6 +34,12 @@ export default function Settings() {
           </Animated.View>
 
           <View className="gap-3">
+            {isLoading ? (
+              <View className="items-center py-10">
+                <ActivityIndicator color="#c084fc" />
+              </View>
+            ) : null}
+
             {goals.map((goal, index) => {
               const years = Object.values(goal.years).sort((a, b) => a.year - b.year);
               const count = years.length;
@@ -71,6 +79,19 @@ export default function Settings() {
               <AddCard onPress={() => router.push('/plano-nome')} />
             </Animated.View>
           </View>
+
+          <Pressable
+            onPress={() => void logout()}
+            className="mt-10 overflow-hidden rounded-[14px]">
+            {({ pressed }) => (
+              <View className={`items-center bg-[#2c2c2e] py-4 ${pressed ? 'opacity-80' : ''}`}>
+                <Text className="text-[16px] font-semibold text-[#ff453a]">Sair</Text>
+                {user?.email ? (
+                  <Text className="mt-1 text-[12px] text-[#8e8e93]">{user.email}</Text>
+                ) : null}
+              </View>
+            )}
+          </Pressable>
         </ScrollView>
       </SafeAreaView>
     </View>

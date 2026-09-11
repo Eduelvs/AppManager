@@ -1,10 +1,18 @@
 export type MonthActuals = Record<number, number>;
 
 export type YearPlan = {
+  id?: string;
   year: number;
   monthlyContribution: number;
   annualRate: number;
   actuals: MonthActuals;
+  monthIds?: Record<number, string>;
+};
+
+export type Goal = {
+  id: string;
+  name: string;
+  years: Record<number, YearPlan>;
 };
 
 export const MONTHS_PT = [

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { Canvas } from '@shopify/react-native-skia';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -8,16 +8,35 @@ import { cssInterop } from 'nativewind';
 
 import { GlassField } from '@/components/glass';
 import { Background } from '@/components/Background';
+import { useAuth } from '@/lib/auth';
+import { ApiError } from '@/lib/api/client';
 
 cssInterop(Canvas, { className: 'style' });
 cssInterop(SafeAreaView, { className: 'style' });
 
-
 export default function Login() {
   const router = useRouter();
-  const enterApp = () => router.replace('/dashboard');
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [pending, setPending] = useState(false);
+
+  const canSubmit = email.trim().includes('@') && password.length > 0 && !pending;
+
+  const handleLogin = async () => {
+    if (!canSubmit) return;
+    setError('');
+    setPending(true);
+    try {
+      await login(email, password);
+      router.replace('/dashboard');
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Não foi possível entrar. Tente novamente.');
+    } finally {
+      setPending(false);
+    }
+  };
 
   return (
     <View className="flex-1 bg-black">
@@ -41,21 +60,40 @@ export default function Login() {
             placeholder="Digite seu email"
             keyboardType="email-address"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(value) => {
+              setEmail(value);
+              setError('');
+            }}
           />
           <GlassField
             label="Senha"
             placeholder="Digite sua senha"
             secure
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(value) => {
+              setPassword(value);
+              setError('');
+            }}
           />
 
-          <Pressable className="mt-3 overflow-hidden rounded-[14px]" onPress={enterApp}>
+          {error ? (
+            <Text className="mb-3 text-center text-sm text-[#ff453a]">{error}</Text>
+          ) : null}
+
+          <Pressable
+            className="mt-3 overflow-hidden rounded-[14px]"
+            disabled={!canSubmit}
+            onPress={() => void handleLogin()}>
             {({ pressed }) => (
               <View
-                className={`items-center justify-center bg-white py-4 ${pressed ? 'opacity-80' : ''}`}>
-                <Text className="text-base font-bold text-black">Entrar</Text>
+                className={`items-center justify-center bg-white py-4 ${
+                  pressed || !canSubmit ? 'opacity-80' : ''
+                } ${!canSubmit ? 'opacity-50' : ''}`}>
+                {pending ? (
+                  <ActivityIndicator color="#000" />
+                ) : (
+                  <Text className="text-base font-bold text-black">Entrar</Text>
+                )}
               </View>
             )}
           </Pressable>
