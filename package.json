@@ -20,6 +20,7 @@
     "nativewind": "^4.2.6",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-native": "0.86.3",
     "react-native-animated-glow": "^3.1.0",
     "react-native-edge-to-edge": "^1.8.1",
