@@ -129,6 +129,7 @@ export default function Dashboard() {
                     </Text>
                   </GlassCard>
                 </View>
+                {monthlyYield > 0 && (
                 <View className="flex gap-3">
                   <GlassCard className="flex-1 p-4">
                     <View className="mb-2 flex-row items-center gap-2">
@@ -145,6 +146,7 @@ export default function Dashboard() {
                     </Text>
                   </GlassCard>
                 </View>
+                )}  
               </Animated.View>
 
               <Animated.View entering={FadeInUp.delay(100).springify()}>
