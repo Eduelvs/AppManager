@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
@@ -24,7 +24,8 @@ import { useInvestments } from '@/lib/investment-store';
 
 export default function Dashboard() {
   const router = useRouter();
-  const { goals, activeGoal, activeGoalId, planList, getPlan, setActiveGoalId } = useInvestments();
+  const { goals, activeGoal, activeGoalId, planList, getPlan, setActiveGoalId, isLoading } =
+    useInvestments();
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const currentYear = new Date().getFullYear();
@@ -77,7 +78,11 @@ export default function Dashboard() {
             <Text className="text-3xl font-bold text-white">Investimentos</Text>
           </Animated.View>
 
-          {!activeGoal ? (
+          {!activeGoal && isLoading ? (
+            <View className="items-center py-16">
+              <ActivityIndicator color="#c084fc" />
+            </View>
+          ) : !activeGoal ? (
             <Animated.View entering={FadeInUp.delay(60).springify()}>
               <GlassCard className="mb-6 items-center p-8">
                 <Ionicons name="flag-outline" size={40} color="#71717a" />

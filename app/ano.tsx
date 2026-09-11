@@ -23,10 +23,12 @@ export default function AnoForm() {
   const [year, setYear] = useState(originalYear || new Date().getFullYear());
   const [monthly, setMonthly] = useState(existing ? String(existing.monthlyContribution) : '');
   const [rate, setRate] = useState(existing ? String(existing.annualRate) : '');
+  const [saving, setSaving] = useState(false);
 
   const monthlyValue = parseAmount(monthly);
   const rateValue = parseAmount(rate);
-  const canSave = Number.isFinite(year) && year >= 1900 && year <= 2200 && monthlyValue > 0;
+  const canSave =
+    Number.isFinite(year) && year >= 1900 && year <= 2200 && monthlyValue > 0 && !saving;
 
   const planList = useMemo(() => {
     const goal = goals.find((g) => g.id === goalId);
@@ -45,7 +47,7 @@ export default function AnoForm() {
     return projectedThroughYear([...previous, draft], year);
   }, [planList, year, monthlyValue, rateValue, originalYear, existing?.actuals]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!canSave || !goalId) return;
 
     const conflict = planList.some((p) => p.year === year && p.year !== originalYear);
@@ -54,19 +56,21 @@ export default function AnoForm() {
       return;
     }
 
-    upsertPlan({
-      year,
-      monthlyContribution: monthlyValue,
-      annualRate: rateValue,
-      goalId,
-      actuals: existing?.actuals,
-    });
-
-    if (isEdit && originalYear && originalYear !== year) {
-      removePlan(originalYear, goalId);
+    setSaving(true);
+    try {
+      await upsertPlan({
+        year,
+        monthlyContribution: monthlyValue,
+        annualRate: rateValue,
+        goalId,
+        planId: existing?.id,
+      });
+      router.back();
+    } catch (err) {
+      Alert.alert('Erro', err instanceof Error ? err.message : 'Não foi possível salvar o ano.');
+    } finally {
+      setSaving(false);
     }
-
-    router.back();
   };
 
   const handleDelete = () => {
@@ -77,8 +81,17 @@ export default function AnoForm() {
         text: 'Excluir',
         style: 'destructive',
         onPress: () => {
-          removePlan(originalYear, goalId);
-          router.back();
+          void (async () => {
+            try {
+              await removePlan(originalYear, goalId);
+              router.back();
+            } catch (err) {
+              Alert.alert(
+                'Erro',
+                err instanceof Error ? err.message : 'Não foi possível excluir o ano.',
+              );
+            }
+          })();
         },
       },
     ]);
@@ -89,7 +102,7 @@ export default function AnoForm() {
       <SheetHeader
         title={isEdit ? 'Editar ano' : 'Novo ano'}
         onCancel={() => router.back()}
-        onSave={handleSave}
+        onSave={() => void handleSave()}
         saveDisabled={!canSave}
       />
 

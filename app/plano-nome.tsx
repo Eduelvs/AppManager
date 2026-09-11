@@ -17,17 +17,24 @@ export default function PlanoNomeForm() {
   const isEdit = !!goal;
 
   const [name, setName] = useState(goal?.name ?? '');
-  const canSave = name.trim().length > 0;
+  const [saving, setSaving] = useState(false);
+  const canSave = name.trim().length > 0 && !saving;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!canSave) return;
-    if (isEdit && goal) {
-      renameGoal(goal.id, name);
+    setSaving(true);
+    try {
+      if (isEdit && goal) {
+        await renameGoal(goal.id, name);
+      } else {
+        await createGoal(name);
+      }
       router.back();
-      return;
+    } catch (err) {
+      Alert.alert('Erro', err instanceof Error ? err.message : 'Não foi possível salvar o plano.');
+    } finally {
+      setSaving(false);
     }
-    createGoal(name);
-    router.back();
   };
 
   const handleDelete = () => {
@@ -41,8 +48,17 @@ export default function PlanoNomeForm() {
           text: 'Excluir',
           style: 'destructive',
           onPress: () => {
-            removeGoal(goal.id);
-            router.dismissAll();
+            void (async () => {
+              try {
+                await removeGoal(goal.id);
+                router.dismissAll();
+              } catch (err) {
+                Alert.alert(
+                  'Erro',
+                  err instanceof Error ? err.message : 'Não foi possível excluir o plano.',
+                );
+              }
+            })();
           },
         },
       ]
@@ -54,7 +70,7 @@ export default function PlanoNomeForm() {
       <SheetHeader
         title={isEdit ? 'Editar plano' : 'Novo plano'}
         onCancel={() => router.back()}
-        onSave={handleSave}
+        onSave={() => void handleSave()}
         saveDisabled={!canSave}
       />
 

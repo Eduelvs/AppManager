@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MonthPicker } from '@/components/MonthPicker';
@@ -26,18 +26,27 @@ export default function AporteModal() {
   const [amount, setAmount] = useState<string>(
     actuals[new Date().getMonth()] ? String(actuals[new Date().getMonth()]) : ''
   );
+  const [saving, setSaving] = useState(false);
 
   const existing = actuals[month];
-  const canSave = parseAmount(amount) > 0 || existing != null;
+  const canSave = (parseAmount(amount) > 0 || existing != null) && !saving;
 
   const handleSelectMonth = (m: number) => {
     setMonth(m);
     setAmount(actuals[m] ? String(actuals[m]) : '');
   };
 
-  const handleSave = () => {
-    setActual(year, month, parseAmount(amount), goalId);
-    router.back();
+  const handleSave = async () => {
+    if (!canSave) return;
+    setSaving(true);
+    try {
+      await setActual(year, month, parseAmount(amount), goalId);
+      router.back();
+    } catch (err) {
+      Alert.alert('Erro', err instanceof Error ? err.message : 'Não foi possível salvar o aporte.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -45,7 +54,7 @@ export default function AporteModal() {
       <SheetHeader
         title="Aporte"
         onCancel={() => router.back()}
-        onSave={handleSave}
+        onSave={() => void handleSave()}
         saveDisabled={!canSave && !amount}
       />
 
