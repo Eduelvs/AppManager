@@ -42,37 +42,6 @@ export function monthlyRate(annualRatePercent: number): number {
   return annualRatePercent / 100 / 12;
 }
 
-function accumulate(contributions: number[], annualRate: number): number[] {
-  const i = monthlyRate(annualRate);
-  const out: number[] = [];
-  let balance = 0;
-  for (let m = 0; m < 12; m++) {
-    balance = balance * (1 + i) + (contributions[m] ?? 0);
-    out.push(balance);
-  }
-  return out;
-}
-
-export function projectedCumulative(plan: YearPlan): number[] {
-  const contributions = Array.from({ length: 12 }, () => plan.monthlyContribution);
-  return accumulate(contributions, plan.annualRate);
-}
-
-export function realCumulative(plan: YearPlan): number[] {
-  const contributions = Array.from({ length: 12 }, (_, m) => plan.actuals[m] ?? 0);
-  return accumulate(contributions, plan.annualRate);
-}
-
-export function projectedTotal(plan: YearPlan): number {
-  const arr = projectedCumulative(plan);
-  return arr[arr.length - 1] ?? 0;
-}
-
-export function realTotal(plan: YearPlan): number {
-  const arr = realCumulative(plan);
-  return arr[arr.length - 1] ?? 0;
-}
-
 export function contributedPrincipal(plan: YearPlan): number {
   return Object.values(plan.actuals).reduce((sum, v) => sum + (v || 0), 0);
 }

@@ -35,8 +35,6 @@ export function GlassField({
   prefix,
   suffix,
   secure,
-  autoCapitalize = 'none',
-  onBlur,
 }: {
   label: string;
   placeholder?: string;
@@ -46,8 +44,6 @@ export function GlassField({
   prefix?: string;
   suffix?: string;
   secure?: boolean;
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
-  onBlur?: () => void;
 }) {
   const [focused, setFocused] = useState(false);
 
@@ -69,15 +65,12 @@ export function GlassField({
           placeholderTextColor="rgba(255,255,255,0.4)"
           keyboardType={keyboardType}
           secureTextEntry={secure}
-          autoCapitalize={autoCapitalize}
+          autoCapitalize="none"
           autoCorrect={false}
           cursorColor="#d1a0f2"
           selectionColor="#d1a0f2"
           onFocus={() => setFocused(true)}
-          onBlur={() => {
-            setFocused(false);
-            onBlur?.();
-          }}
+          onBlur={() => setFocused(false)}
           className="flex-1 text-[15px] text-white"
         />
         {suffix ? <Text className="ml-1 text-[15px] text-[#a1a1aa]">{suffix}</Text> : null}

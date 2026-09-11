@@ -25,9 +25,15 @@ export default function RootLayout() {
             <Stack.Screen
               name="aporte"
               options={{
-                presentation: 'modal',
-                gestureEnabled: true,
-                contentStyle: { backgroundColor: '#0b0b0f' },
+                presentation: 'formSheet',
+                sheetAllowedDetents: [0.55],
+                sheetGrabberVisible: true,
+                sheetCornerRadius: 28,
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: '#1c1c1e',
+                  height: '100%',
+                },
               }}
             />
             <Stack.Screen
