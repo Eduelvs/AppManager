@@ -11,6 +11,7 @@ import { Background } from '@/components/Background';
 import { GlassField } from '@/components/glass';
 import { ApiError } from '@/lib/api/client';
 import { useAuth } from '@/lib/auth';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 cssInterop(Canvas, { className: 'style' });
 cssInterop(BlurView, { className: 'style' });
@@ -19,6 +20,7 @@ cssInterop(SafeAreaView, { className: 'style' });
 export default function SignIn() {
   const router = useRouter();
   const { register } = useAuth();
+  const { isDarkColorScheme, colors } = useColorScheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -59,8 +61,8 @@ export default function SignIn() {
   };
 
   return (
-    <View className="flex-1 bg-black">
-      <StatusBar style="light" />
+    <View className="flex-1 bg-background">
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       <Background />
 
       <SafeAreaView className="flex-1">
@@ -69,8 +71,8 @@ export default function SignIn() {
           keyboardShouldPersistTaps="handled"
           contentContainerClassName="grow justify-center px-6 py-12">
           <View className="mb-9 items-center">
-            <Text className="mb-3 text-3xl font-bold text-white">Criar Conta</Text>
-            <Text className="text-center text-[15px] text-[#e6e6e6]">
+            <Text className="mb-3 text-3xl font-bold text-foreground">Criar Conta</Text>
+            <Text className="text-center text-[15px] text-muted">
               Vamos começar criando sua conta.
             </Text>
           </View>
@@ -116,21 +118,21 @@ export default function SignIn() {
             onPress={() => void handleRegister()}>
             {({ pressed }) => (
               <View
-                className={`items-center justify-center bg-white py-4 ${
+                className={`items-center justify-center bg-foreground py-4 ${
                   pressed || !canSubmit ? 'opacity-80' : ''
                 } ${!canSubmit ? 'opacity-50' : ''}`}>
                 {pending ? (
-                  <ActivityIndicator color="#000" />
+                  <ActivityIndicator color={colors.background} />
                 ) : (
-                  <Text className="text-base font-bold text-black">Criar Conta</Text>
+                  <Text className="text-base font-bold text-background">Criar Conta</Text>
                 )}
               </View>
             )}
           </Pressable>
 
-          <Text className="mt-6 text-center text-sm text-[#e6e6e6]">
+          <Text className="mt-6 text-center text-sm text-muted">
             Já tem uma conta?{' '}
-            <Text className="font-semibold text-white" onPress={() => router.push('/login')}>
+            <Text className="font-semibold text-foreground" onPress={() => router.push('/login')}>
               Fazer Login
             </Text>
           </Text>

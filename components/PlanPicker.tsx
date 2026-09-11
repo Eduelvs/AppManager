@@ -3,6 +3,7 @@ import React from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 
 import type { Goal } from '@/lib/finance';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 type PlanPickerProps = {
   visible: boolean;
@@ -21,22 +22,27 @@ export function PlanPicker({
   onClose,
   onCreatePress,
 }: PlanPickerProps) {
+  const { colors, isDarkColorScheme } = useColorScheme();
+
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable className="flex-1 justify-end bg-black/70" onPress={onClose}>
+      <Pressable
+        className={`flex-1 justify-end ${isDarkColorScheme ? 'bg-black/70' : 'bg-black/40'}`}
+        onPress={onClose}>
         <Pressable
-          className="mx-5 mb-10 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[#14141a]"
+          className="mx-5 mb-10 overflow-hidden rounded-2xl border"
+          style={{ backgroundColor: colors.card, borderColor: colors.border }}
           onPress={() => {}}>
-          <View className="border-b border-[rgba(255,255,255,0.08)] px-5 py-4">
-            <Text className="text-[13px] font-semibold uppercase tracking-widest text-[#a1a1aa]">
+          <View className="border-b px-5 py-4" style={{ borderBottomColor: colors.border }}>
+            <Text className="text-[13px] font-semibold uppercase tracking-widest text-muted">
               Objetivo
             </Text>
-            <Text className="mt-1 text-lg font-bold text-white">Escolher plano</Text>
+            <Text className="mt-1 text-lg font-bold text-foreground">Escolher plano</Text>
           </View>
 
           {goals.length === 0 ? (
             <View className="px-5 py-6">
-              <Text className="text-center text-[14px] text-[#a1a1aa]">
+              <Text className="text-center text-[14px] text-muted">
                 Nenhum plano criado ainda.
               </Text>
             </View>
@@ -54,19 +60,17 @@ export function PlanPicker({
                     className="flex-row items-center gap-3 px-5 py-3.5">
                     <View
                       className={`h-9 w-9 items-center justify-center rounded-full ${
-                        active
-                          ? 'bg-[rgba(168,85,247,0.25)]'
-                          : 'bg-[rgba(255,255,255,0.06)]'
+                        active ? 'bg-[rgba(168,85,247,0.25)]' : isDarkColorScheme ? 'bg-white/10' : 'bg-black/5'
                       }`}>
                       <Ionicons
                         name={active ? 'flag' : 'flag-outline'}
                         size={16}
-                        color={active ? '#c084fc' : '#a1a1aa'}
+                        color={active ? '#c084fc' : colors.muted}
                       />
                     </View>
                     <Text
                       className={`flex-1 text-[16px] font-semibold ${
-                        active ? 'text-white' : 'text-[#c9c9cf]'
+                        active ? 'text-foreground' : 'text-muted'
                       }`}
                       numberOfLines={1}>
                       {goal.name}
@@ -86,7 +90,8 @@ export function PlanPicker({
                 onClose();
                 onCreatePress();
               }}
-              className="flex-row items-center gap-3 border-t border-[rgba(255,255,255,0.08)] px-5 py-4">
+              className="flex-row items-center gap-3 border-t px-5 py-4"
+              style={{ borderTopColor: colors.border }}>
               <View className="h-9 w-9 items-center justify-center rounded-full bg-[rgba(168,85,247,0.2)]">
                 <Ionicons name="add" size={18} color="#c084fc" />
               </View>

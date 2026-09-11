@@ -28,7 +28,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (!hydrated) {
     return (
-      <View className="flex-1 items-center justify-center bg-black">
+      <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator color="#c084fc" />
       </View>
     );

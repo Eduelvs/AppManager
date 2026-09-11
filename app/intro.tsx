@@ -13,11 +13,13 @@ import Animated, {
 
 import { StyledLottieView } from '@/@types/lottie';
 import { Background } from '@/components/Background';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 const cardAnimation = require('../lottieFiles/card lq.json');
 
 export default function Intro() {
   const router = useRouter();
+  const { isDarkColorScheme } = useColorScheme();
   const didLeave = useRef(false);
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -47,8 +49,8 @@ export default function Intro() {
   }));
 
   return (
-    <View className="flex-1 items-center justify-center overflow-hidden bg-black">
-      <StatusBar style="light" />
+    <View className="flex-1 items-center justify-center overflow-hidden bg-background">
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       <Background />
       <Animated.View style={zoomStyle}>
         <StyledLottieView

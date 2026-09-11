@@ -10,6 +10,7 @@ import { GlassField } from '@/components/glass';
 import { Background } from '@/components/Background';
 import { useAuth } from '@/lib/auth';
 import { ApiError } from '@/lib/api/client';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 cssInterop(Canvas, { className: 'style' });
 cssInterop(SafeAreaView, { className: 'style' });
@@ -17,6 +18,7 @@ cssInterop(SafeAreaView, { className: 'style' });
 export default function Login() {
   const router = useRouter();
   const { login } = useAuth();
+  const { isDarkColorScheme, colors } = useColorScheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -39,8 +41,8 @@ export default function Login() {
   };
 
   return (
-    <View className="flex-1 bg-black">
-      <StatusBar style="light" />
+    <View className="flex-1 bg-background">
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       <Background />
 
       <SafeAreaView className="flex-1">
@@ -49,8 +51,8 @@ export default function Login() {
           keyboardShouldPersistTaps="handled"
           contentContainerClassName="grow justify-center px-6 py-12">
           <View className="mb-9 items-center">
-            <Text className="mb-3 text-3xl font-bold text-white">Login</Text>
-            <Text className="text-center text-[15px] text-[#e6e6e6]">
+            <Text className="mb-3 text-3xl font-bold text-foreground">Login</Text>
+            <Text className="text-center text-[15px] text-muted">
               Bem-vindo de volta. Faça login para continuar.
             </Text>
           </View>
@@ -86,21 +88,21 @@ export default function Login() {
             onPress={() => void handleLogin()}>
             {({ pressed }) => (
               <View
-                className={`items-center justify-center bg-white py-4 ${
+                className={`items-center justify-center bg-foreground py-4 ${
                   pressed || !canSubmit ? 'opacity-80' : ''
                 } ${!canSubmit ? 'opacity-50' : ''}`}>
                 {pending ? (
-                  <ActivityIndicator color="#000" />
+                  <ActivityIndicator color={colors.background} />
                 ) : (
-                  <Text className="text-base font-bold text-black">Entrar</Text>
+                  <Text className="text-base font-bold text-background">Entrar</Text>
                 )}
               </View>
             )}
           </Pressable>
 
-          <Text className="mt-6 text-center text-sm text-[#e6e6e6]">
+          <Text className="mt-6 text-center text-sm text-muted">
             Não tem uma conta?{' '}
-            <Text className="font-semibold text-white" onPress={() => router.push('/signIn')}>
+            <Text className="font-semibold text-foreground" onPress={() => router.push('/signIn')}>
               Criar Conta
             </Text>
           </Text>

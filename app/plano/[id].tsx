@@ -10,11 +10,13 @@ import { Background } from '@/components/Background';
 import { AddCard, GlassCard } from '@/components/glass';
 import { formatBRL, projectedThroughYear } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 export default function PlanoDetalhe() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { goals, isLoading } = useInvestments();
+  const { colors, isDarkColorScheme } = useColorScheme();
 
   const goal = goals.find((g) => g.id === id);
   const planList = useMemo(
@@ -24,10 +26,10 @@ export default function PlanoDetalhe() {
 
   if (!goal && isLoading) {
     return (
-      <View className="flex-1 bg-black">
-        <StatusBar style="light" />
+      <View className="flex-1 bg-background">
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
         <SafeAreaView className="flex-1 items-center justify-center">
-          <Text className="text-[#a1a1aa]">Carregando plano...</Text>
+          <Text className="text-muted">Carregando plano...</Text>
         </SafeAreaView>
       </View>
     );
@@ -35,10 +37,10 @@ export default function PlanoDetalhe() {
 
   if (!goal) {
     return (
-      <View className="flex-1 bg-black">
-        <StatusBar style="light" />
+      <View className="flex-1 bg-background">
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
         <SafeAreaView className="flex-1 items-center justify-center">
-          <Text className="text-[#a1a1aa]">Plano não encontrado</Text>
+          <Text className="text-muted">Plano não encontrado</Text>
           <Pressable onPress={() => router.back()} className="mt-4">
             <Text className="text-[16px] font-semibold text-[#c084fc]">Voltar</Text>
           </Pressable>
@@ -48,8 +50,8 @@ export default function PlanoDetalhe() {
   }
 
   return (
-    <View className="flex-1 bg-black">
-      <StatusBar style="light" />
+    <View className="flex-1 bg-background">
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       <Background />
 
       <SafeAreaView className="flex-1" edges={['top']}>
@@ -58,7 +60,7 @@ export default function PlanoDetalhe() {
             onPress={() => router.back()}
             hitSlop={12}
             className="h-10 w-10 items-center justify-center rounded-full">
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={colors.foreground} />
           </Pressable>
           <Pressable
             onPress={() =>
@@ -74,10 +76,10 @@ export default function PlanoDetalhe() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="px-6 pb-32">
           <Animated.View entering={FadeInUp.springify()} className="mb-10 mt-4 items-center">
-            <Text className="text-center text-3xl font-bold text-white">{goal.name}</Text>
+            <Text className="text-center text-3xl font-bold text-foreground">{goal.name}</Text>
           </Animated.View>
 
-          <Text className="mb-3 text-[13px] font-semibold uppercase tracking-widest text-[#a1a1aa]">
+          <Text className="mb-3 text-[13px] font-semibold uppercase tracking-widest text-muted">
             Anos configurados
           </Text>
 
@@ -96,10 +98,10 @@ export default function PlanoDetalhe() {
                   {({ pressed }) => (
                     <GlassCard className={`p-4 ${pressed ? 'opacity-80' : ''}`}>
                       <View className="flex-row items-center justify-between">
-                        <Text className="text-[16px] font-bold text-white">{p.year}</Text>
-                        <Ionicons name="chevron-forward" size={18} color="#71717a" />
+                        <Text className="text-[16px] font-bold text-foreground">{p.year}</Text>
+                        <Ionicons name="chevron-forward" size={18} color={colors.grey2} />
                       </View>
-                      <Text className="mt-1 text-[13px] text-[#a1a1aa]">
+                      <Text className="mt-1 text-[13px] text-muted">
                         {formatBRL(p.monthlyContribution)}/mês · {p.annualRate}% a.a.
                       </Text>
                       <Text className="mt-1 text-[13px] font-semibold text-[#c084fc]">

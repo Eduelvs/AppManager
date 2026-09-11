@@ -8,10 +8,12 @@ import { YearPicker } from '@/components/YearPicker';
 import { formatBRL, projectedThroughYear } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
 import { parseAmount } from '@/utils/parseAmount';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 export default function AnoForm() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { colors } = useColorScheme();
   const params = useLocalSearchParams<{ goalId?: string; year?: string }>();
   const goalId = typeof params.goalId === 'string' ? params.goalId : undefined;
   const originalYear = params.year ? Number(params.year) : undefined;
@@ -98,7 +100,7 @@ export default function AnoForm() {
   };
 
   return (
-    <View style={[styles.root, { paddingBottom: Math.max(insets.bottom, 16) }]}>
+    <View style={[styles.root, { backgroundColor: colors.sheet, paddingBottom: Math.max(insets.bottom, 16) }]}>
       <SheetHeader
         title={isEdit ? 'Editar ano' : 'Novo ano'}
         onCancel={() => router.back()}
@@ -129,7 +131,7 @@ export default function AnoForm() {
           </FormRow>
         </FormGroup>
 
-        <Text style={styles.hint}>
+        <Text style={[styles.hint, { color: colors.muted }]}>
           {canSave
             ? `Projeção ao fim de ${year}: ${formatBRL(preview)}`
             : 'Informe o ano e o aporte mensal para salvar.'}
@@ -138,8 +140,8 @@ export default function AnoForm() {
         {isEdit ? (
           <Pressable onPress={handleDelete} style={styles.deleteWrap}>
             {({ pressed }) => (
-              <View style={[styles.deleteBtn, pressed && styles.pressed]}>
-                <Text style={styles.deleteText}>Excluir ano</Text>
+              <View style={[styles.deleteBtn, { backgroundColor: colors.grouped }, pressed && styles.pressed]}>
+                <Text style={[styles.deleteText, { color: colors.destructive }]}>Excluir ano</Text>
               </View>
             )}
           </Pressable>
@@ -152,7 +154,6 @@ export default function AnoForm() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#1c1c1e',
   },
   body: {
     paddingTop: 28,
@@ -161,7 +162,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
     fontSize: 13,
-    color: '#8e8e93',
   },
   deleteWrap: {
     marginHorizontal: 16,
@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
   deleteBtn: {
     alignItems: 'center',
     borderRadius: 12,
-    backgroundColor: '#2c2c2e',
     paddingVertical: 14,
   },
   pressed: {
@@ -179,6 +178,5 @@ const styles = StyleSheet.create({
   deleteText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ff453a',
   },
 });

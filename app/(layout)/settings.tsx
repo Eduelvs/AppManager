@@ -11,15 +11,17 @@ import { AddCard, GlassCard } from '@/components/glass';
 import { formatBRL, portfolioProjected } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
 import { useAuth } from '@/lib/auth';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 export default function Settings() {
   const router = useRouter();
   const { goals, isLoading, setActiveGoalId } = useInvestments();
   const { logout, user } = useAuth();
+  const { colors, isDarkColorScheme } = useColorScheme();
 
   return (
-    <View className="flex-1 bg-black">
-      <StatusBar style="light" />
+    <View className="flex-1 bg-background">
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       <Background />
 
       <SafeAreaView className="flex-1" edges={['top']}>
@@ -27,10 +29,10 @@ export default function Settings() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="px-6 pt-4 pb-32">
           <Animated.View entering={FadeInUp.springify()} className="mb-6">
-            <Text className="text-[13px] font-semibold uppercase tracking-widest text-[#a1a1aa]">
+            <Text className="text-[13px] font-semibold uppercase tracking-widest text-muted">
               Configurações
             </Text>
-            <Text className="mt-1 text-3xl font-bold text-white">Planos</Text>
+            <Text className="mt-1 text-3xl font-bold text-foreground">Planos</Text>
           </Animated.View>
 
           <View className="gap-3">
@@ -56,10 +58,10 @@ export default function Settings() {
                       <GlassCard
                         className={`flex-row items-center p-5 ${pressed ? 'opacity-80' : ''}`}>
                         <View className="flex-1 pr-3">
-                          <Text className="text-[17px] font-bold text-white" numberOfLines={1}>
+                          <Text className="text-[17px] font-bold text-foreground" numberOfLines={1}>
                             {goal.name}
                           </Text>
-                          <Text className="mt-1 text-[13px] text-[#a1a1aa]">
+                          <Text className="mt-1 text-[13px] text-muted">
                             {count === 0
                               ? 'Nenhum ano ainda'
                               : `${count} ${count === 1 ? 'ano' : 'anos'} · ${formatBRL(
@@ -67,7 +69,7 @@ export default function Settings() {
                                 )}`}
                           </Text>
                         </View>
-                        <Ionicons name="chevron-forward" size={18} color="#71717a" />
+                        <Ionicons name="chevron-forward" size={18} color={colors.grey2} />
                       </GlassCard>
                     )}
                   </Pressable>
@@ -84,10 +86,12 @@ export default function Settings() {
             onPress={() => void logout()}
             className="mt-10 overflow-hidden rounded-[14px]">
             {({ pressed }) => (
-              <View className={`items-center bg-[#2c2c2e] py-4 ${pressed ? 'opacity-80' : ''}`}>
+              <View
+                className={`items-center py-4 ${pressed ? 'opacity-80' : ''}`}
+                style={{ backgroundColor: colors.grouped }}>
                 <Text className="text-[16px] font-semibold text-[#ff453a]">Sair</Text>
                 {user?.email ? (
-                  <Text className="mt-1 text-[12px] text-[#8e8e93]">{user.email}</Text>
+                  <Text className="mt-1 text-[12px] text-muted">{user.email}</Text>
                 ) : null}
               </View>
             )}

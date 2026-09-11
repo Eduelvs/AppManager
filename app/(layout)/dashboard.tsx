@@ -24,6 +24,7 @@ import {
   realThroughYear,
 } from '@/lib/finance';
 import { useInvestments } from '@/lib/investment-store';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 const aporteCtaGlow: PresetConfig = {
   metadata: {
@@ -68,6 +69,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { goals, activeGoal, activeGoalId, planList, getPlan, setActiveGoalId, isLoading } =
     useInvestments();
+  const { colors, isDarkColorScheme } = useColorScheme();
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const currentYear = new Date().getFullYear();
@@ -99,8 +101,8 @@ export default function Dashboard() {
   const goToCreatePlan = () => router.push('/plano-nome');
 
   return (
-    <View className="flex-1 bg-black">
-      <StatusBar style="light" />
+    <View className="flex-1 bg-background">
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       <Background />
 
       <SafeAreaView className="flex-1" edges={['top']}>
@@ -110,14 +112,14 @@ export default function Dashboard() {
           <Animated.View entering={FadeInUp.springify()} className="mb-6">
             <Pressable
               onPress={() => setPickerOpen(true)}
-              className="mb-2 flex-row items-center gap-1.5 self-start rounded-full border border-[rgba(255,255,255,0.14)] px-3 py-1.5">
+              className="mb-2 flex-row items-center gap-1.5 self-start rounded-full border border-black/10 px-3 py-1.5 dark:border-white/14">
               <Ionicons name="flag-outline" size={12} color="#c084fc" />
-              <Text className="max-w-[220px] text-[13px] font-semibold text-white" numberOfLines={1}>
+              <Text className="max-w-[220px] text-[13px] font-semibold text-foreground" numberOfLines={1}>
                 {activeGoal?.name ?? 'Escolher objetivo'}
               </Text>
-              <Ionicons name="chevron-down" size={14} color="#a1a1aa" />
+              <Ionicons name="chevron-down" size={14} color={colors.muted} />
             </Pressable>
-            <Text className="text-3xl font-bold text-white">Investimentos</Text>
+            <Text className="text-3xl font-bold text-foreground">Investimentos</Text>
           </Animated.View>
 
           {!activeGoal && isLoading ? (
@@ -127,11 +129,11 @@ export default function Dashboard() {
           ) : !activeGoal ? (
             <Animated.View entering={FadeInUp.delay(60).springify()}>
               <GlassCard className="mb-6 items-center p-8">
-                <Ionicons name="flag-outline" size={40} color="#71717a" />
-                <Text className="mt-3 text-center text-base font-semibold text-white">
+                <Ionicons name="flag-outline" size={40} color={colors.grey2} />
+                <Text className="mt-3 text-center text-base font-semibold text-foreground">
                   Nenhum plano criado
                 </Text>
-                <Text className="mt-1 text-center text-[13px] text-[#a1a1aa]">
+                <Text className="mt-1 text-center text-[13px] text-muted">
                   Crie um objetivo nas configurações para acompanhar aportes e projeções.
                 </Text>
                 <PrimaryButton
@@ -148,10 +150,10 @@ export default function Dashboard() {
                   <GlassCard className="flex-1 p-4">
                     <View className="mb-2 flex-row items-center gap-2">
                       <Ionicons name="trending-up-outline" size={16} color="#c084fc" />
-                      <Text className="text-[12px] font-medium text-[#a1a1aa]">Projetado</Text>
+                      <Text className="text-[12px] font-medium text-muted">Projetado</Text>
                     </View>
                     <Text
-                      className="text-xl font-bold text-white"
+                      className="text-xl font-bold text-foreground"
                       numberOfLines={1}
                       adjustsFontSizeToFit>
                       {formatBRL(totalProjected)}
@@ -161,10 +163,10 @@ export default function Dashboard() {
                   <GlassCard className="flex-1 p-4">
                     <View className="mb-2 flex-row items-center gap-2">
                       <Ionicons name="wallet-outline" size={16} color="#4ade80" />
-                      <Text className="text-[12px] font-medium text-[#a1a1aa]">Real</Text>
+                      <Text className="text-[12px] font-medium text-muted">Real</Text>
                     </View>
                     <Text
-                      className="text-xl font-bold text-white"
+                      className="text-xl font-bold text-foreground"
                       numberOfLines={1}
                       adjustsFontSizeToFit>
                       {formatBRL(totalReal)}
@@ -176,12 +178,12 @@ export default function Dashboard() {
                   <GlassCard className="flex-1 p-4">
                     <View className="mb-2 flex-row items-center gap-2">
                       <Ionicons name="trending-up-outline" size={16} color="#c084fc" />
-                      <Text className="text-[12px] font-medium text-[#a1a1aa]">
+                      <Text className="text-[12px] font-medium text-muted">
                         Rentabilidade Mensal
                       </Text>
                     </View>
                     <Text
-                      className="text-xl font-bold text-white"
+                      className="text-xl font-bold text-foreground"
                       numberOfLines={1}
                       adjustsFontSizeToFit>
                       {formatBRL(monthlyYield)}
@@ -194,12 +196,12 @@ export default function Dashboard() {
               <Animated.View entering={FadeInUp.delay(100).springify()}>
                 <GlassCard className="mb-6 p-4">
                   <View className="mb-2 flex-row items-center justify-between">
-                    <Text className="text-[13px] text-[#c9c9cf]">Real vs. projetado</Text>
+                    <Text className="text-[13px] text-muted">Real vs. projetado</Text>
                     <Text className="text-[13px] font-semibold text-[#c084fc]">
                       {Math.round(progress * 100)}%
                     </Text>
                   </View>
-                  <View className="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                  <View className="h-2 overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
                     <View
                       className="h-full rounded-full bg-[#a855f7]"
                       style={{ width: `${Math.max(2, progress * 100)}%` }}
@@ -223,11 +225,11 @@ export default function Dashboard() {
                           className={`rounded-full border px-4 py-2 ${
                             active
                               ? 'border-[#d1a0f2] bg-[rgba(168,85,247,0.2)]'
-                              : 'border-[rgba(255,255,255,0.14)]'
+                              : 'border-black/10 dark:border-white/14'
                           }`}>
                           <Text
                             className={`text-[14px] font-semibold ${
-                              active ? 'text-white' : 'text-[#a1a1aa]'
+                              active ? 'text-foreground' : 'text-muted'
                             }`}>
                             {year}
                           </Text>
@@ -242,24 +244,24 @@ export default function Dashboard() {
                 <Animated.View entering={FadeInUp.delay(180).springify()}>
                   <GlassCard className="mb-6 p-5">
                     <View className="mb-4 flex-row items-center justify-between">
-                      <Text className="text-lg font-bold text-white">Projeção {effectiveYear}</Text>
-                      <Text className="text-[12px] text-[#71717a]">{plan.annualRate}% a.a.</Text>
+                      <Text className="text-lg font-bold text-foreground">Projeção {effectiveYear}</Text>
+                      <Text className="text-[12px] text-grey2">{plan.annualRate}% a.a.</Text>
                     </View>
 
                     <BarChart data={chartData} />
 
-                    <View className="mt-5 flex-row justify-between border-t border-[rgba(255,255,255,0.08)] pt-4">
+                    <View className="mt-5 flex-row justify-between border-t border-black/10 pt-4 dark:border-white/10">
                       <View>
-                        <Text className="text-[12px] text-[#a1a1aa]">
+                        <Text className="text-[12px] text-muted">
                           Projetado até {effectiveYear}
                         </Text>
-                        <Text className="mt-0.5 text-base font-bold text-white">
+                        <Text className="mt-0.5 text-base font-bold text-foreground">
                           {formatBRLCompact(projectedThroughYear(planList, effectiveYear))}
                         </Text>
                       </View>
                       <View className="items-end">
-                        <Text className="text-[12px] text-[#a1a1aa]">Real até {effectiveYear}</Text>
-                        <Text className="mt-0.5 text-base font-bold text-white">
+                        <Text className="text-[12px] text-muted">Real até {effectiveYear}</Text>
+                        <Text className="mt-0.5 text-base font-bold text-foreground">
                           {formatBRLCompact(realThroughYear(planList, effectiveYear))}
                         </Text>
                       </View>
@@ -269,11 +271,11 @@ export default function Dashboard() {
               ) : (
                 <Animated.View entering={FadeInUp.delay(180).springify()}>
                   <GlassCard className="mb-6 items-center p-8">
-                    <Ionicons name="bar-chart-outline" size={40} color="#71717a" />
-                    <Text className="mt-3 text-center text-base font-semibold text-white">
+                    <Ionicons name="bar-chart-outline" size={40} color={colors.grey2} />
+                    <Text className="mt-3 text-center text-base font-semibold text-foreground">
                       Nenhum ano configurado
                     </Text>
-                    <Text className="mt-1 text-center text-[13px] text-[#a1a1aa]">
+                    <Text className="mt-1 text-center text-[13px] text-muted">
                       Configure um ano com aporte mensal e taxa de juros para ver a projeção.
                     </Text>
                     <PrimaryButton

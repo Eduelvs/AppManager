@@ -5,10 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FormGroup, FormInput, FormRow, SheetHeader } from '@/components/NativeForm';
 import { useInvestments } from '@/lib/investment-store';
+import { useColorScheme } from '@/lib/useColorScheme';
 
 export default function PlanoNomeForm() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { colors } = useColorScheme();
   const params = useLocalSearchParams<{ goalId?: string }>();
   const goalId = typeof params.goalId === 'string' ? params.goalId : undefined;
 
@@ -66,7 +68,7 @@ export default function PlanoNomeForm() {
   };
 
   return (
-    <View style={[styles.root, { paddingBottom: Math.max(insets.bottom, 16) }]}>
+    <View style={[styles.root, { backgroundColor: colors.sheet, paddingBottom: Math.max(insets.bottom, 16) }]}>
       <SheetHeader
         title={isEdit ? 'Editar plano' : 'Novo plano'}
         onCancel={() => router.back()}
@@ -89,8 +91,8 @@ export default function PlanoNomeForm() {
         {isEdit ? (
           <Pressable onPress={handleDelete} style={styles.deleteWrap}>
             {({ pressed }) => (
-              <View style={[styles.deleteBtn, pressed && styles.pressed]}>
-                <Text style={styles.deleteText}>Excluir plano</Text>
+              <View style={[styles.deleteBtn, { backgroundColor: colors.grouped }, pressed && styles.pressed]}>
+                <Text style={[styles.deleteText, { color: colors.destructive }]}>Excluir plano</Text>
               </View>
             )}
           </Pressable>
@@ -103,7 +105,6 @@ export default function PlanoNomeForm() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#1c1c1e',
   },
   body: {
     paddingTop: 28,
@@ -115,7 +116,6 @@ const styles = StyleSheet.create({
   deleteBtn: {
     alignItems: 'center',
     borderRadius: 12,
-    backgroundColor: '#2c2c2e',
     paddingVertical: 14,
   },
   pressed: {
@@ -124,6 +124,5 @@ const styles = StyleSheet.create({
   deleteText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ff453a',
   },
 });
